@@ -11,7 +11,8 @@ Sources (public feeds only):
 What it does:
 - Canonicalizes links and strips tracking parameters
 - Dedupes and groups near-duplicate headlines
-- Uses the article's own `og:image` when one exists, otherwise sends text only
+- Scannable posts: bold headline, one "why it matters" sentence, and the source link
+- Uses the article's own `og:image` as a photo post when one exists; otherwise a text post that relies on Telegram's link preview (the TLDR edition stays text-only, no preview)
 - Runs on an hourly cron and only posts at 09:00 and 15:00 America/Los_Angeles (DST-safe), with a per-slot lock in KV
 - Answers a read-only `/status` command in the configured chat
 
@@ -36,4 +37,4 @@ wrangler secret put WEBHOOK_SECRET
 wrangler deploy
 ```
 
-After deploying, register the webhook by sending `POST /admin/set-webhook` with header `X-Admin-Secret: <WEBHOOK_SECRET>`. `POST /admin/webhook-info` (same header) returns non-sensitive webhook status. Both return 403 without the secret.
+After deploying, register the webhook by sending `POST /admin/set-webhook` with header `X-Admin-Secret: <WEBHOOK_SECRET>`. `POST /admin/webhook-info` (same header) returns non-sensitive webhook status. `POST /admin/preview` (same header) posts one or two not-yet-posted stories marked "PREVIEW - new format" without touching the seen list or slot locks. All admin routes return 403 without the secret.
