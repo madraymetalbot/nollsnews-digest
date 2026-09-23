@@ -6,6 +6,10 @@ export default {
  async fetch(req,env,ctx){const u=new URL(req.url);
   if(u.pathname==="/health")return Response.json({ok:true,service:"nollsnews-digest"});
   if(req.method==="POST"&&u.pathname==="/telegram"){requireEnv(env);if(!safeEqual(req.headers.get("x-telegram-bot-api-secret-token"),env.WEBHOOK_SECRET))return new Response("forbidden",{status:403});let up;try{up=await req.json()}catch{return new Response("ok")}const m=up.message;if(m&&String(m.chat?.id)===String(env.TELEGRAM_CHAT_ID)&&/^\/status(?:@\w+)?(?:\s|$)/i.test(m.text||""))ctx.waitUntil(sendText(env,`NollsNews status\nSources: The Verge, HN 300+, CNBC Tech, TLDR Tech\nSchedule: 09:00 and 15:00 PT\nPublishing: ${env.ENABLE_POSTS==="true"?"on":"paused"}`).catch(()=>{}));return new Response("ok")}
+  if(req.method==="POST"&&u.pathname.startsWith("/admin/")){requireEnv(env);if(!safeEqual(req.headers.get("x-admin-secret"),env.WEBHOOK_SECRET))return new Response("forbidden",{status:403});
+   if(u.pathname==="/admin/set-webhook"){await telegram(env,"setWebhook",{url:`${u.origin}/telegram`,secret_token:env.WEBHOOK_SECRET,allowed_updates:["message"],drop_pending_updates:true});return new Response("webhook configured")}
+   if(u.pathname==="/admin/webhook-info"){const j=await telegram(env,"getWebhookInfo",{});const r=j.result||{};return Response.json({url:r.url,pending_update_count:r.pending_update_count,last_error_date:r.last_error_date,last_error_message:r.last_error_message,allowed_updates:r.allowed_updates})}
+   return new Response("not found",{status:404})}
   return new Response("NollsNews digest bot")},
  async scheduled(event,env,ctx){requireEnv(env);ctx.waitUntil(runSlot(env))}
 };

@@ -36,4 +36,4 @@ wrangler secret put WEBHOOK_SECRET
 wrangler deploy
 ```
 
-Register the webhook yourself with Telegram's `setWebhook`, pointing at `https://<worker>/telegram` with the same `secret_token`.
+After deploying, register the webhook by sending `POST /admin/set-webhook` with header `X-Admin-Secret: <WEBHOOK_SECRET>`. `POST /admin/webhook-info` (same header) returns non-sensitive webhook status. Both return 403 without the secret.
