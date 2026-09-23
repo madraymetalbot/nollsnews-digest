@@ -1,0 +1,13 @@
+name = "nollsnews-digest"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+
+[vars]
+ENABLE_POSTS = "true"
+
+[[kv_namespaces]]
+binding = "NOLLSNEWS_STATE"
+id = "<your-kv-namespace-id>"
+
+[triggers]
+crons = ["0 * * * *"]
