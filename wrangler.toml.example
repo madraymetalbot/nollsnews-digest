@@ -6,6 +6,9 @@ preview_urls = false
 [vars]
 ENABLE_POSTS = "true"
 
+[ai]
+binding = "AI"
+
 [[kv_namespaces]]
 binding = "NOLLSNEWS_STATE"
 id = "<your-kv-namespace-id>"

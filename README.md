@@ -11,7 +11,8 @@ Sources (public feeds only):
 What it does:
 - Canonicalizes links and strips tracking parameters
 - Dedupes and groups near-duplicate headlines
-- Scannable posts: bold headline, one "why it matters" sentence, and the source link
+- Scannable posts: bold headline, a 2-3 sentence summary, and the source link
+- Summaries come from Workers AI (free allocation) reading the article text, the feed text and page metadata; when the article is paywalled or blocked it uses what is freely available (feed text, page description, and for Hacker News stories the top discussion comments). If nothing usable comes back it falls back to the one-line description
 - Uses the article's own `og:image` as a photo post when one exists; otherwise a text post that relies on Telegram's link preview (the TLDR edition stays text-only, no preview)
 - Runs on an hourly cron and only posts at 09:00 and 15:00 America/Los_Angeles (DST-safe), with a per-slot lock in KV
 - Answers a read-only `/status` command in the configured chat
@@ -27,6 +28,7 @@ Everything sensitive lives in Cloudflare encrypted secrets. The Worker refuses t
 | `WEBHOOK_SECRET` | secret | Verified via `X-Telegram-Bot-Api-Secret-Token` |
 | `ENABLE_POSTS` | var | `true` to publish |
 | `NOLLSNEWS_STATE` | KV binding | Seen links and slot locks |
+| `AI` | Workers AI binding | Summaries (optional: without it posts use the one-line description) |
 
 Copy `wrangler.toml.example` to `wrangler.toml`, fill in your KV namespace ID, then:
 
