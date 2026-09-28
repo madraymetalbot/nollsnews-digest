@@ -3,7 +3,7 @@
 A Cloudflare Worker that posts an hourly tech news digest to a Telegram group.
 
 What it does:
-- Sources (all free to read): Engadget, Hacker News 300+ comment threads (linked to HN discussion), 9to5Google, Ars Technica, TechCrunch, and the TLDR Tech edition
+- Sources (all free to read): Engadget, Hacker News 300+ comment threads (linked to HN discussion), 9to5Google, Ars Technica, TechCrunch, CNBC (paywalled Pro articles are skipped), and the TLDR Tech edition
 - Canonicalizes links, strips tracking parameters, dedupes, and mixes sources so one feed can't fill the digest
 - Posts ONE newsletter-style message per slot: topic sections (AI, Tech, Gadgets, Security, Business, Policy, Science) with one short line and a source link per story, trimmed to fit Telegram's message limit
 - Lines are written by Workers AI (free allocation) from the article text, feed text and page description; unavailable pages fall back to what is freely available (and for Hacker News stories, the top discussion comments). It also drops stories that repeat the same news. Without AI, lines fall back to the headline
