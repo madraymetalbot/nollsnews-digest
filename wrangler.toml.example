@@ -5,6 +5,7 @@ preview_urls = false
 
 [vars]
 ENABLE_POSTS = "true"
+PUBLIC_ORIGIN = "https://<your-worker>.workers.dev"
 
 [ai]
 binding = "AI"
