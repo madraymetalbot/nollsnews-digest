@@ -9,6 +9,7 @@ What it does:
 - Lines are written by Workers AI (free allocation) from the article text, feed text and page description; unavailable pages fall back to what is freely available (and for Hacker News stories, the top discussion comments). It also drops stories that repeat the same news. Without AI, lines fall back to the headline
 - Runs on an hourly cron and posts from 05:00 through 21:00 America/Los_Angeles (DST-safe), only when new stories are available, with a per-slot lock in KV; stories are marked seen only after the digest posts
 - Answers a read-only `/status` command in the configured chat
+- Adds an **Open cards** button under each digest: a Worker-hosted card page (thumbnail left, headline right, 5 cards per page with prev/next arrows) stored in KV with a random 128-bit URL key, served at `/d/<slot>/<key>` for 48h. The button is a plain URL button because Telegram's Bot API only allows `web_app` inline buttons in private chats, not groups
 
 ## Configuration
 
@@ -22,6 +23,7 @@ Everything sensitive lives in Cloudflare encrypted secrets. The Worker refuses t
 | `ENABLE_POSTS` | var | `true` to publish |
 | `NOLLSNEWS_STATE` | KV binding | Seen links and slot locks |
 | `AI` | Workers AI binding | Digest lines (optional: without it lines use the headline) |
+| `PUBLIC_ORIGIN` | var | Public worker origin (e.g. `https://nollsnews-digest.<subdomain>.workers.dev`). Enables the card-page URL and button; without it digests post text-only |
 
 Copy `wrangler.toml.example` to `wrangler.toml`, fill in your KV namespace ID, then:
 
